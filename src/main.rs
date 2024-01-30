@@ -2,9 +2,23 @@
 use std::{
     io::{Read, Write},
     net::TcpListener, 
-    str::from_utf8
+    str::from_utf8,
+    collections::HashMap,
 };
 const NEW_LINE:&str = "\r\n";
+
+fn parse_headers(req: &str) -> HashMap<&str, &str> {
+    req.lines()
+        .skip(1)
+        .take_while(|line| !line.is_empty())
+        .map(|line| {
+            let mut parts = line.splitn(2, ':');
+            let key = parts.next().unwrap();
+            let value = parts.next().unwrap();
+            (key, value.trim())
+        })
+        .collect()
+}
 fn main() {
     // You can use print statements as follows for debugging, they'll be visible when running tests.
     println!("Logs from your program will appear here!");
@@ -35,6 +49,13 @@ fn main() {
                     "/" => {
                         let response = format!("HTTP/1.1 200 OK{}{}",NEW_LINE,NEW_LINE);
                         let _ = _stream.write(response.as_bytes());
+                    }
+                    "/user-agent" => {
+                        let headers = parse_headers(req);
+                        let user_agent = headers.get("User-Agent").unwrap();
+                        let response =format!("HTTP/1.1 200 OK{}Content-Type: text/plain{}Content-Length: {}{}{}{}{}",NEW_LINE,NEW_LINE,user_agent.chars().count(),NEW_LINE,NEW_LINE,user_agent,NEW_LINE);
+                        let _ = _stream.write(response.as_bytes());
+
                     }
                     _ if path.starts_with("/echo") => {
                         let message = path.split("/echo/").nth(1).unwrap();
