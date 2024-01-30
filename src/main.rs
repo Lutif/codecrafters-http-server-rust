@@ -78,7 +78,7 @@ fn main() {
                             return;
                         }else {
                             let file_contents = std::fs::read_to_string(path_name).unwrap();
-                            let response =format!("HTTP/1.1 200 OK{}Content-Type: text/plain{}Content-Length: {}{}{}{}{}",NEW_LINE,NEW_LINE,file_contents.chars().count(),NEW_LINE,NEW_LINE,file_contents,NEW_LINE);
+                            let response =format!("HTTP/1.1 200 OK{}Content-Type: application/octet-stream{}Content-Length: {}{}{}{}{}",NEW_LINE,NEW_LINE,file_contents.chars().count(),NEW_LINE,NEW_LINE,file_contents,NEW_LINE);
                             let _ = _stream.write(response.as_bytes());
                         }
                         print!("file name {}",file_name);
