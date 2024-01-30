@@ -4,7 +4,7 @@ use std::{
     net::TcpListener, 
     str::from_utf8
 };
-const NEW_LINE:&str = "\r\n\r\n";
+const NEW_LINE:&str = "\r\n";
 fn main() {
     // You can use print statements as follows for debugging, they'll be visible when running tests.
     println!("Logs from your program will appear here!");
@@ -33,12 +33,12 @@ fn main() {
                 
                 match path {
                     "/" => {
-                        let response = format!("HTTP/1.1 200 OK{}",NEW_LINE);
+                        let response = format!("HTTP/1.1 200 OK{}{}",NEW_LINE,NEW_LINE);
                         let _ = _stream.write(response.as_bytes());
                     }
                     _ if path.starts_with("/echo") => {
                         let message = path.split("/echo").nth(1).unwrap().replace("/", "");
-                        let response =format!("HTTP/1.1 200 OK{}Content-Type: text/plain{}{}{}",NEW_LINE,NEW_LINE,message,NEW_LINE);
+                        let response =format!("HTTP/1.1 200 OK{}Content-Type: text/plain{}{}{}{}",NEW_LINE,NEW_LINE,NEW_LINE,message,NEW_LINE);
                         let _ = _stream.write(response.as_bytes());
                     }
                     _ => {
