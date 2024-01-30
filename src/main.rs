@@ -4,6 +4,7 @@ use std::{
     net::TcpListener, 
     str::from_utf8,
     collections::HashMap,
+    thread::spawn as thread_spawn,
 };
 const NEW_LINE:&str = "\r\n";
 
@@ -28,7 +29,8 @@ fn main() {
     for stream in listener.incoming() {
         match stream {
             Ok(mut _stream) => {
-                let mut buf = [0; 1024];
+                thread_spawn(move || {
+                    let mut buf = [0; 1024];
                 _stream.read(&mut buf).unwrap();
                 let req = from_utf8(&mut buf).unwrap();
                 let Some(first) = req.lines().next() else {
@@ -68,6 +70,8 @@ fn main() {
                     }
                     
                 }
+                });
+                
             }
             Err(e) => {
                 println!("error: {}", e);
