@@ -37,8 +37,8 @@ fn main() {
                         let _ = _stream.write(response.as_bytes());
                     }
                     _ if path.starts_with("/echo") => {
-                        let message = path.split("/echo").nth(1).unwrap().replace("/", "");
-                        let response =format!("HTTP/1.1 200 OK{}Content-Type: text/plain{}Content-Length: {}{}{}{}{}",NEW_LINE,NEW_LINE,message.len(),NEW_LINE,NEW_LINE,message,NEW_LINE);
+                        let message = path.split("/echo/").nth(1).unwrap();
+                        let response =format!("HTTP/1.1 200 OK{}Content-Type: text/plain{}Content-Length: {}{}{}{}{}",NEW_LINE,NEW_LINE,message.chars().count(),NEW_LINE,NEW_LINE,message,NEW_LINE);
                         let _ = _stream.write(response.as_bytes());
                     }
                     _ => {
