@@ -33,6 +33,7 @@ fn main() {
                 let mut parts = req.split("\r\n\r\n");
                 let _headers = parts.next().unwrap();
                 let body = parts.next().unwrap_or("");
+                let body = body.replace("\0", "");
 
                 let Some(first) = req.lines().next() else {
                     let response = "HTTP/1.1 200 OK\r\n\r\n";
@@ -91,6 +92,7 @@ fn main() {
                             "POST" => {
                                 print!("Got post request");
                                 print!("path name {}",body);
+                                
                                 let mut file = File::create(path_name).unwrap();
                                 file.write_all( body.as_bytes()).unwrap();
                                 let response = format!("HTTP/1.1 201 OK{}{}",NEW_LINE,NEW_LINE);
